@@ -1,9 +1,26 @@
+import { Box, Container } from "@mui/material";
+
+import { Header } from "@/components/Header";
+import { MainContent } from "@/components/MainContent";
+import { Sidebar } from "@/components/Sidebar";
+
 export default function Home() {
   return (
-    <main>
-      <h1>Recipe App</h1>
+    <>
+      <Header />
 
-      <p>Find and save your favorite meals and cocktails</p>
-    </main>
+      <Container maxWidth="xl">
+        <Box
+          sx={{
+            display: "flex",
+            gap: 4,
+            marginTop: "2px",
+          }}
+        >
+          <Sidebar />
+          <MainContent />
+        </Box>
+      </Container>
+    </>
   );
 }
