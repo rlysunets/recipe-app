@@ -10,14 +10,18 @@ import {
 } from "@mui/material";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import Image from "next/image";
 
-export function RecipeCard() {
+import { Recipe } from "@/types/recipe";
+
+type Props = {
+  recipe: Recipe;
+};
+
+export function RecipeCard({ recipe }: Props) {
   return (
     <Box
       sx={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-        gap: "26px",
         p: 2,
         border: 1,
         borderColor: "text.primary",
@@ -33,7 +37,7 @@ export function RecipeCard() {
           mb: 2,
         }}
       >
-        <Typography sx={{ fontWeight: 700 }}>Title</Typography>
+        <Typography sx={{ fontWeight: 700 }}>{recipe.title}</Typography>
 
         <IconButton size="small">
           <FavoriteBorderIcon fontSize="small" />
@@ -47,8 +51,19 @@ export function RecipeCard() {
           bgcolor: "grey.100",
           borderRadius: 2,
           mb: 2,
+          position: "relative",
+          overflow: "hidden",
         }}
-      />
+      >
+        <Image
+          src={recipe.image}
+          alt={recipe.title}
+          fill
+          style={{
+            objectFit: "cover",
+          }}
+        />
+      </Box>
 
       <Typography
         sx={{
@@ -57,7 +72,7 @@ export function RecipeCard() {
           mb: 1,
         }}
       >
-        Category
+        {recipe.category}
       </Typography>
 
       <Stack
@@ -69,7 +84,7 @@ export function RecipeCard() {
           flexWrap: "wrap",
         }}
       >
-        <Chip label="Tag" size="small" />
+        <Chip label={recipe.tags[0]} size="small" />
         <Chip label="Tag" size="small" />
         <Chip label="Tag" size="small" />
         <Chip label="Tag" size="small" />

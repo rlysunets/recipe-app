@@ -1,8 +1,15 @@
 import { Box, Button, Typography } from "@mui/material";
 
 import { RecipeCard } from "@/components/RecipeCard";
+import { Recipe } from "@/types/recipe";
 
-export function MainContent() {
+type Props = {
+  recipes: Recipe[];
+};
+
+export function MainContent({ recipes }: Props) {
+  console.log(recipes);
+
   return (
     <Box sx={{ flex: 1 }}>
       <Typography
@@ -18,18 +25,14 @@ export function MainContent() {
 
       <Box
         sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          columnGap: "26px",
-          rowGap: "24px",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+          gap: "26px",
         }}
       >
-        <RecipeCard />
-        <RecipeCard />
-        <RecipeCard />
-        <RecipeCard />
-        <RecipeCard />
-
+        {recipes.map((recipe) => (
+          <RecipeCard key={recipe.id} recipe={recipe} />
+        ))}
       </Box>
 
       <Box

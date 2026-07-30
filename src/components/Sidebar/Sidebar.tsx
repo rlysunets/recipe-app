@@ -19,8 +19,12 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import FacebookIcon from "@mui/icons-material/Facebook";
 
-export function Sidebar() {
-  const [searchBy, setSearchBy] = useState("title");
+type Props = {
+  onSearch: (query: string) => void;
+};
+
+export function Sidebar({ onSearch }: Props) {
+  const [searchBy, setSearchBy] = useState("");
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [ingredient, setIngredient] = useState("");
@@ -164,6 +168,23 @@ export function Sidebar() {
             "&:hover": {
               bgcolor: "primary.dark",
             },
+          }}
+          onClick={() => {
+            let query = "";
+
+            if (searchBy === "title") {
+              query = title;
+            }
+
+            if (searchBy === "category") {
+              query = category;
+            }
+
+            if (searchBy === "ingredient") {
+              query = ingredient;
+            }
+
+            onSearch(query);
           }}
         >
           Submit
