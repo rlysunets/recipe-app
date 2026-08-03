@@ -27,17 +27,26 @@ export function RecipeCard({ recipe }: Props) {
         borderColor: "text.primary",
         borderRadius: 3,
         bgcolor: "background.paper",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: "flex-start",
+          gap: 1,
           mb: 2,
         }}
       >
-        <Typography sx={{ fontWeight: 700 }}>{recipe.title}</Typography>
+        <Typography
+          sx={{
+            fontWeight: 700,
+            flexGrow: 1,
+          }}
+        >
+          {recipe.title}
+        </Typography>
 
         <IconButton size="small">
           <FavoriteBorderIcon fontSize="small" />
@@ -48,17 +57,18 @@ export function RecipeCard({ recipe }: Props) {
         sx={{
           width: "100%",
           aspectRatio: "1 / 1",
-          bgcolor: "grey.100",
-          borderRadius: 2,
-          mb: 2,
           position: "relative",
           overflow: "hidden",
+          borderRadius: 2,
+          bgcolor: "grey.100",
+          mb: 2,
         }}
       >
         <Image
           src={recipe.image}
           alt={recipe.title}
           fill
+          sizes="300px"
           style={{
             objectFit: "cover",
           }}
@@ -75,27 +85,30 @@ export function RecipeCard({ recipe }: Props) {
         {recipe.category}
       </Typography>
 
-      <Stack
-        direction="row"
-        spacing={1}
-        useFlexGap
-        sx={{
-          mb: 3,
-          flexWrap: "wrap",
-        }}
-      >
-        <Chip label={recipe.tags[0]} size="small" />
-        <Chip label="Tag" size="small" />
-        <Chip label="Tag" size="small" />
-        <Chip label="Tag" size="small" />
-      </Stack>
+      {recipe.tags.length > 0 && (
+        <Stack
+          direction="row"
+          spacing={1}
+          useFlexGap
+          sx={{
+            flexWrap: "wrap",
+            mb: 3,
+          }}
+        >
+          {recipe.tags.map((tag) => (
+            <Chip
+              key={tag}
+              label={tag}
+              size="small"
+            />
+          ))}
+        </Stack>
+      )}
 
       <Button
         variant="outlined"
         sx={{
           textTransform: "none",
-          borderColor: "primary.main",
-          color: "primary.main",
           borderRadius: 2,
         }}
       >

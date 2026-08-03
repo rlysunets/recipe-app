@@ -13,21 +13,24 @@ import {
   RadioGroup,
   TextField,
   Typography,
+  Autocomplete,
 } from "@mui/material";
 
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import FacebookIcon from "@mui/icons-material/Facebook";
 
-type Props = {
-  onSearch: (query: string) => void;
+import { SearchBy } from "@/types/search";
+
+export type Props = {
+  categories: string[];
+  ingredients: string[];
+  onSearch: (type: SearchBy, query: string) => void;
 };
 
-export function Sidebar({ onSearch }: Props) {
-  const [searchBy, setSearchBy] = useState("");
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [ingredient, setIngredient] = useState("");
+export function Sidebar({ categories, ingredients, onSearch }: Props) {
+  const [searchBy, setSearchBy] = useState<SearchBy>("title");
+  const [query, setQuery] = useState("");
 
   return (
     <Box
@@ -57,7 +60,10 @@ export function Sidebar({ onSearch }: Props) {
       <FormControl fullWidth>
         <RadioGroup
           value={searchBy}
-          onChange={(e) => setSearchBy(e.target.value)}
+          onChange={(e) => {
+            setSearchBy(e.target.value as SearchBy);
+            setQuery("");
+          }}
         >
           <FormControlLabel
             value="title"
@@ -65,19 +71,21 @@ export function Sidebar({ onSearch }: Props) {
             label="Title"
           />
 
-          <TextField
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
-            size="small"
-            fullWidth
-            sx={{
-              mb: 3,
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-              },
-            }}
-          />
+          {searchBy === "title" && (
+            <TextField
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Title"
+              size="small"
+              fullWidth
+              sx={{
+                mb: 2,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2,
+                },
+              }}
+            />
+          )}
 
           <FormControlLabel
             value="category"
@@ -85,24 +93,31 @@ export function Sidebar({ onSearch }: Props) {
             label="Category"
           />
 
-          <TextField
-            select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            size="small"
-            fullWidth
-            sx={{
-              mb: 3,
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-              },
-            }}
-          >
-            <MenuItem value="">Select category</MenuItem>
-            <MenuItem value="beef">Beef</MenuItem>
-            <MenuItem value="chicken">Chicken</MenuItem>
-            <MenuItem value="dessert">Dessert</MenuItem>
-          </TextField>
+          {searchBy === "category" && (
+            <TextField
+              select
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              size="small"
+              fullWidth
+              sx={{
+                mb: 2,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2,
+                },
+              }}
+            >
+              <MenuItem value="" disabled>
+                Select category
+              </MenuItem>
+
+              {categories.map((category) => (
+                <MenuItem value={category} key={category}>
+                  {category}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
 
           <FormControlLabel
             value="ingredient"
@@ -110,24 +125,29 @@ export function Sidebar({ onSearch }: Props) {
             label="Ingredient"
           />
 
-          <TextField
-            select
-            value={ingredient}
-            onChange={(e) => setIngredient(e.target.value)}
-            size="small"
-            fullWidth
-            sx={{
-              mb: 5,
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 2,
-              },
-            }}
-          >
-            <MenuItem value="">Select ingredient</MenuItem>
-            <MenuItem value="egg">Egg</MenuItem>
-            <MenuItem value="milk">Milk</MenuItem>
-            <MenuItem value="chicken">Chicken</MenuItem>
-          </TextField>
+          {searchBy === "ingredient" && (
+            <Autocomplete
+              options={ingredients}
+              value={query}
+              onChange={(_, value) => setQuery(value ?? "")}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Ingredient"
+                  size="small"
+                  placeholder="Select ingredient"
+                />
+              )}
+              size="small"
+              fullWidth
+              sx={{
+                mb: 2,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2,
+                },
+              }}
+            />
+          )}
         </RadioGroup>
       </FormControl>
 
@@ -151,6 +171,10 @@ export function Sidebar({ onSearch }: Props) {
               borderColor: "primary.main",
             },
           }}
+          onClick={() => {
+            setSearchBy("title");
+            setQuery("");
+          }}
         >
           Clear
         </Button>
@@ -169,23 +193,7 @@ export function Sidebar({ onSearch }: Props) {
               bgcolor: "primary.dark",
             },
           }}
-          onClick={() => {
-            let query = "";
-
-            if (searchBy === "title") {
-              query = title;
-            }
-
-            if (searchBy === "category") {
-              query = category;
-            }
-
-            if (searchBy === "ingredient") {
-              query = ingredient;
-            }
-
-            onSearch(query);
-          }}
+          onClick={() => onSearch(searchBy, query)}
         >
           Submit
         </Button>
