@@ -1,3 +1,8 @@
+export interface RecipeIngredient {
+  ingredient: string;
+  measure: string;
+}
+
 export interface Recipe {
   id: string;
   title: string;
@@ -7,4 +12,5 @@ export interface Recipe {
   tags: string[];
   instructions: string;
   youtube: string;
+  ingredients: RecipeIngredient[];
 }

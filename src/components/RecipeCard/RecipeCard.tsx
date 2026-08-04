@@ -9,6 +9,8 @@ import {
   Typography,
 } from "@mui/material";
 
+import Link from "next/link";
+
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Image from "next/image";
 
@@ -37,6 +39,7 @@ export function RecipeCard({ recipe }: Props) {
           alignItems: "flex-start",
           gap: 1,
           mb: 2,
+          minHeight: "48px",
         }}
       >
         <Typography
@@ -75,37 +78,44 @@ export function RecipeCard({ recipe }: Props) {
         />
       </Box>
 
-      <Typography
+      <Box
         sx={{
-          fontWeight: 700,
-          fontSize: 13,
-          mb: 1,
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          gap: 1,
+          mb: 2,
         }}
       >
-        {recipe.category}
-      </Typography>
-
-      {recipe.tags.length > 0 && (
-        <Stack
-          direction="row"
-          spacing={1}
-          useFlexGap
+        <Typography
           sx={{
-            flexWrap: "wrap",
-            mb: 3,
+            fontWeight: 700,
+            fontSize: 13,
+            mb: 1,
           }}
         >
-          {recipe.tags.map((tag) => (
-            <Chip
-              key={tag}
-              label={tag}
-              size="small"
-            />
-          ))}
-        </Stack>
-      )}
+          {recipe.category}
+        </Typography>
 
+        {recipe.tags.length > 0 && (
+          <Stack
+            direction="row"
+            spacing={1}
+            useFlexGap
+            sx={{
+              flexWrap: "wrap",
+              mb: 3,
+            }}
+          >
+            {recipe.tags.map((tag) => (
+              <Chip key={tag} label={tag} size="small" />
+            ))}
+          </Stack>
+        )}
+      </Box>
       <Button
+        component={Link}
+        href={`/recipes/${recipe.id}`}
         variant="outlined"
         sx={{
           textTransform: "none",
