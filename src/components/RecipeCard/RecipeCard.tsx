@@ -67,7 +67,7 @@ export function RecipeCard({ recipe }: Props) {
           mb: 2,
         }}
       >
-        <Image
+        {/* <Image
           src={recipe.image}
           alt={recipe.title}
           fill
@@ -75,7 +75,7 @@ export function RecipeCard({ recipe }: Props) {
           style={{
             objectFit: "cover",
           }}
-        />
+        /> */}
       </Box>
 
       <Box

@@ -13,6 +13,11 @@ import {
   searchMealsByIngredient,
   searchMealsByTitle,
 } from "@/api/mealApi";
+import {
+  searchRecipesByCategory,
+  searchRecipesByIngredient,
+  searchRecipesByTitle,
+} from "@/api/recipeApi";
 
 import { Recipe } from "@/types/recipe";
 import { SearchBy } from "@/types/search";
@@ -23,7 +28,7 @@ export function RecipesPage() {
   const [ingredients, setIngredients] = useState<string[]>([]);
 
   const [hasSearched, setHasSearched] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadInitialData() {
@@ -34,6 +39,8 @@ export function RecipesPage() {
 
       setCategories(categories);
       setIngredients(ingredients);
+
+      await loadRecipes();
     }
 
     loadInitialData();
@@ -42,21 +49,58 @@ export function RecipesPage() {
   async function handleSearch(type: SearchBy, query: string) {
     setHasSearched(true);
     setIsLoading(true);
+
     let data: Recipe[] = [];
 
     switch (type) {
-      case "title":
-        data = await searchMealsByTitle(query);
-        break;
+      case "title": {
+        const [dbRecipes, apiRecipes] = await Promise.all([
+          searchRecipesByTitle(query),
+          searchMealsByTitle(query),
+        ]);
 
-      case "category":
-        data = await searchMealsByCategory(query);
+        data = [...dbRecipes, ...apiRecipes];
         break;
+      }
 
-      case "ingredient":
-        data = await searchMealsByIngredient(query);
+      case "category": {
+        const [dbRecipes, apiRecipes] = await Promise.all([
+          searchRecipesByCategory(query),
+          searchMealsByCategory(query),
+        ]);
+
+        data = [...dbRecipes, ...apiRecipes];
         break;
+      }
+
+      case "ingredient": {
+        const [dbRecipes, apiRecipes] = await Promise.all([
+          searchRecipesByIngredient(query),
+          searchMealsByIngredient(query),
+        ]);
+
+        data = [...dbRecipes, ...apiRecipes];
+        console.log(data);
+        break;
+      }
     }
+
+    setRecipes(data);
+    setIsLoading(false);
+  }
+
+  async function loadRecipes() {
+    setIsLoading(true);
+
+    const response = await fetch("/api/recipes");
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch recipes");
+    }
+
+    const data: Recipe[] = await response.json();
+
+    console.log("Recipes from API:", data);
 
     setRecipes(data);
     setIsLoading(false);

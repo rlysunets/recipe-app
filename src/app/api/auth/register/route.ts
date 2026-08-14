@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { UserService } from "@/services/user.service";
+import { createUser } from "@/services/user.service";
 import { createUserSchema } from "@/validations/user.validation";
 
 export async function POST(request: NextRequest) {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const user = await UserService.createUser(validation.data);
+    const user = await createUser(validation.data);
 
     return NextResponse.json(user, {
       status: 201,

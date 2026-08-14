@@ -14,3 +14,11 @@ export interface Recipe {
   youtube: string;
   ingredients: RecipeIngredient[];
 }
+
+export interface DbRecipe extends Omit<Recipe, "id"> {
+  id: number;
+  description: string | null;
+  userId: number | null;
+  createdAt: string;
+  updatedAt: string;
+}

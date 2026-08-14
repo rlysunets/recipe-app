@@ -11,7 +11,7 @@ type Props = {
 };
 
 export function MainContent({ recipes, hasSearched, isLoading }: Props) {
-  if (!hasSearched) {
+  if (recipes.length === 0 && !hasSearched && !isLoading) {
     return (
       <Box
         sx={{
@@ -67,7 +67,7 @@ export function MainContent({ recipes, hasSearched, isLoading }: Props) {
     );
   }
 
-  if (recipes.length === 0) {
+  if (recipes.length === 0 && hasSearched) {
     return (
       <Box
         sx={{
@@ -106,7 +106,7 @@ export function MainContent({ recipes, hasSearched, isLoading }: Props) {
           my: 3,
         }}
       >
-        Search results
+        {hasSearched ? "Search results" : "Our recipes"}
       </Typography>
 
       <Box
