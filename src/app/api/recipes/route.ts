@@ -12,6 +12,8 @@ export async function POST(request: NextRequest) {
       status: 201,
     });
   } catch (error) {
+    console.error("Failed to create recipe:", error);
+
     return NextResponse.json(
       {
         message: "Failed to create recipe",
@@ -28,7 +30,9 @@ export async function GET() {
     const recipes = await getRecipes();
 
     return NextResponse.json(recipes);
-  } catch {
+  } catch (error) {
+    console.error("Failed to fetch recipes:", error);
+
     return NextResponse.json(
       {
         message: "Failed to fetch recipes",
