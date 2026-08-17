@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   Box,
@@ -25,18 +25,34 @@ import { SearchBy } from "@/types/search";
 export type Props = {
   categories: string[];
   ingredients: string[];
+  initialFilter?: SearchBy;
+  initialQuery?: string;
   onSearch: (type: SearchBy, query: string) => void;
 };
 
-export function Sidebar({ categories, ingredients, onSearch }: Props) {
-  const [searchBy, setSearchBy] = useState<SearchBy>("title");
-  const [query, setQuery] = useState("");
+export function Sidebar({
+  categories,
+  ingredients,
+  initialFilter = "title",
+  initialQuery = "",
+  onSearch,
+}: Props) {
+  const [searchBy, setSearchBy] = useState<SearchBy>(initialFilter);
+  const [query, setQuery] = useState(initialQuery);
+
+  useEffect(() => {
+    setSearchBy(initialFilter);
+    setQuery(initialQuery);
+  }, [initialFilter, initialQuery]);
 
   return (
     <Box
       sx={{
         width: 320,
-        minHeight: "calc(100vh - 64px)",
+        position: "sticky",
+        top: 1,
+        height: "100vh",
+        overflowY: "auto",
         px: 3,
         py: 7,
         borderRight: 1,
@@ -44,6 +60,8 @@ export function Sidebar({ categories, ingredients, onSearch }: Props) {
         bgcolor: "background.paper",
         display: "flex",
         flexDirection: "column",
+        mt: 1,
+        borderRadius: 3,
       }}
     >
       <Typography
@@ -174,6 +192,7 @@ export function Sidebar({ categories, ingredients, onSearch }: Props) {
           onClick={() => {
             setSearchBy("title");
             setQuery("");
+            onSearch("title", "");
           }}
         >
           Clear
@@ -199,7 +218,7 @@ export function Sidebar({ categories, ingredients, onSearch }: Props) {
         </Button>
       </Box>
 
-      <Box sx={{ mt: "auto" }}>
+      <Box sx={{ mt: "auto", mb: 3 }}>
         <Box
           sx={{
             display: "flex",

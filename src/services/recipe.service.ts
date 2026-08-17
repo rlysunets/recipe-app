@@ -79,3 +79,27 @@ export async function searchRecipesByIngredient(query: string) {
     });
   });
 }
+
+export async function getRecipeById(id: number): Promise<Recipe | null> {
+  const recipe = await prisma.recipe.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!recipe) {
+    return null;
+  }
+
+  return {
+    id: String(recipe.id),
+    title: recipe.title,
+    category: recipe.category,
+    area: recipe.area ?? "",
+    image: recipe.image ?? "",
+    tags: recipe.tags,
+    instructions: recipe.instructions,
+    youtube: recipe.youtube ?? "",
+    ingredients: recipe.ingredients as unknown as Recipe["ingredients"],
+  };
+}

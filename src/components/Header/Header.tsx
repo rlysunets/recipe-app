@@ -1,3 +1,6 @@
+import Link from "next/link";
+import Image from "next/image";
+
 import {
   AppBar,
   Box,
@@ -28,11 +31,25 @@ export function Header() {
             height: 74,
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: 700 }}>
-            Logo
-          </Typography>
-
-          <Box sx={{ flexGrow: 1 }} />
+          <Link
+            href="/"
+            style={{ textDecoration: "none", color: "inherit", flexGrow: 1 }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+              <Image
+                src="/logo.svg"
+                alt="RecipeBook Logo"
+                width={40}
+                height={40}
+              />
+              <Typography variant="h6" sx={{ fontWeight: 800 }}>
+                Recipe
+                <Box component="span" sx={{ color: "primary.main" }}>
+                  Book
+                </Box>
+              </Typography>
+            </Box>
+          </Link>
 
           <Box
             sx={{

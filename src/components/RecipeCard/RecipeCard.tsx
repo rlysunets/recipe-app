@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import {
   Box,
   Button,
@@ -12,7 +14,6 @@ import {
 import Link from "next/link";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import Image from "next/image";
 
 import { Recipe } from "@/types/recipe";
 
@@ -21,6 +22,8 @@ type Props = {
 };
 
 export function RecipeCard({ recipe }: Props) {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <Box
       sx={{
@@ -67,15 +70,28 @@ export function RecipeCard({ recipe }: Props) {
           mb: 2,
         }}
       >
-        {/* <Image
-          src={recipe.image}
-          alt={recipe.title}
-          fill
-          sizes="300px"
-          style={{
-            objectFit: "cover",
-          }}
-        /> */}
+        {recipe.image && !imageError ? (
+          <img
+            src={recipe.image}
+            alt={recipe.title}
+            onError={() => setImageError(true)}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        ) : (
+          <img
+            src="/placeholder-recipe.jpg"
+            alt="No image"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        )}
       </Box>
 
       <Box

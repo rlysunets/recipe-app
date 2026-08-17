@@ -15,13 +15,14 @@ import { IngredientsList } from "./IngredientsList";
 import { Recipe } from "@/types/recipe";
 
 import Image from "next/image";
+import { useState } from "react";
 
 type Props = {
   recipe: Recipe;
 };
 
 export function RecipeDetails({ recipe }: Props) {
-  console.log(recipe);
+  const [imageError, setImageError] = useState(false);
 
   return (
     <Container maxWidth="lg">
@@ -32,28 +33,30 @@ export function RecipeDetails({ recipe }: Props) {
       >
         <RecipeHeader recipe={recipe} />
 
-        <Box
-          sx={{
-            width: "100%",
-            height: 420,
-            position: "relative",
-            overflow: "hidden",
-            borderRadius: 2,
-            bgcolor: "grey.200",
-            mb: 4,
-          }}
-        >
-          <Image
-            src={recipe.image}
-            alt={recipe.title}
-            loading="eager"
-            fill
-            sizes="100vw"
-            style={{
-              objectFit: "cover",
+        {recipe.image && !imageError && (
+          <Box
+            sx={{
+              width: "100%",
+              height: 420,
+              position: "relative",
+              overflow: "hidden",
+              borderRadius: 2,
+              mb: 4,
             }}
-          />
-        </Box>
+          >
+            <img
+              src={recipe.image}
+              alt={recipe.title}
+              loading="eager"
+              onError={() => setImageError(true)}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </Box>
+        )}
 
         <Box
           sx={{

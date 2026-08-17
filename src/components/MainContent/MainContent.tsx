@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 
@@ -10,7 +12,22 @@ type Props = {
   isLoading: boolean;
 };
 
+const PAGE_SIZE = 6;
+
 export function MainContent({ recipes, hasSearched, isLoading }: Props) {
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [recipes]);
+
+  const handleShowMore = () => {
+    setVisibleCount((prev) => prev + PAGE_SIZE);
+  };
+
+  const visibleRecipes = recipes.slice(0, visibleCount);
+  const hasMore = visibleCount < recipes.length;
+
   if (recipes.length === 0 && !hasSearched && !isLoading) {
     return (
       <Box
@@ -114,32 +131,37 @@ export function MainContent({ recipes, hasSearched, isLoading }: Props) {
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
           gap: "26px",
+          mb: 4,
         }}
       >
-        {recipes.map((recipe) => (
+        {visibleRecipes.map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
       </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          mt: 4,
-        }}
-      >
-        <Button
-          variant="contained"
+      {hasMore && (
+        <Box
           sx={{
-            width: 176,
-            height: 42,
-            borderRadius: 2,
-            textTransform: "none",
+            display: "flex",
+            justifyContent: "center",
+            mt: 4,
           }}
         >
-          Show more
-        </Button>
-      </Box>
+          <Button
+            variant="contained"
+            onClick={handleShowMore}
+            sx={{
+              width: 176,
+              height: 42,
+              borderRadius: 2,
+              textTransform: "none",
+              mb: 4,
+            }}
+          >
+            Show more
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 }
