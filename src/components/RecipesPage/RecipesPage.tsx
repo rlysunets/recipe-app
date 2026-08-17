@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Box, Container } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -23,7 +23,7 @@ import {
 import { Recipe } from "@/types/recipe";
 import { SearchBy } from "@/types/search";
 
-export function RecipesPage() {
+function RecipesPageContent() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [ingredients, setIngredients] = useState<string[]>([]);
@@ -152,5 +152,13 @@ export function RecipesPage() {
         />
       </Box>
     </Container>
+  );
+}
+
+export function RecipesPage() {
+  return (
+    <Suspense fallback={null}>
+      <RecipesPageContent />
+    </Suspense>
   );
 }
