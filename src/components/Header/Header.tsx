@@ -1,5 +1,10 @@
+"use client";
+
+import { useState, useEffect } from "react";
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   AppBar,
@@ -14,6 +19,39 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AddIcon from "@mui/icons-material/Add";
 
 export function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        setIsLoggedIn(data.isLoggedIn);
+      } catch {
+        setIsLoggedIn(false);
+      }
+    }
+
+    checkAuth();
+  }, [pathname]);
+
+  async function handleAuthAction() {
+    if (isLoggedIn) {
+      try {
+        await fetch("/api/auth/logout", { method: "POST" });
+        setIsLoggedIn(false);
+        // router.push("/login");
+        router.refresh();
+      } catch (error) {
+        console.error("Logout failed:", error);
+      }
+    } else {
+      router.push("/login");
+    }
+  }
+
   return (
     <AppBar
       position="static"
@@ -82,8 +120,9 @@ export function Header() {
                 borderRadius: "10px",
                 px: 3,
               }}
+              onClick={handleAuthAction}
             >
-              Log out
+              {isLoggedIn ? "Log out" : "Log in"}
             </Button>
           </Box>
         </Toolbar>

@@ -4,9 +4,9 @@ export const createUserSchema = z.object({
   name: z
     .string()
     .min(2, "Name must contain at least 2 characters")
-    .max(50),
+    .max(50, "Name must contain no more than 50 characters"),
 
-  email: z.email(),
+  email: z.email("Please enter a valid email address"),
 
   password: z
     .string()

@@ -23,9 +23,16 @@ export async function POST(request: NextRequest) {
   try {
     const user = await createUser(validation.data);
 
-    return NextResponse.json(user, {
-      status: 201,
-    });
+    return NextResponse.json(
+      {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+      {
+        status: 201,
+      },
+    );
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
